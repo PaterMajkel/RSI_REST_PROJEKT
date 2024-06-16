@@ -1,0 +1,6 @@
+@RSI_REST_SERVER_HostAddress = http://localhost:5289
+
+GET {{RSI_REST_SERVER_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
