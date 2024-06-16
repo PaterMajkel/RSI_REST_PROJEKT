@@ -1,4 +1,4 @@
-﻿namespace RSI_ZAD12.Models
+﻿namespace RSI_REST_SERVER.Models
 {
     public class Link
     {

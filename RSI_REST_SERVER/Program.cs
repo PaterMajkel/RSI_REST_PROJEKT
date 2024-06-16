@@ -1,4 +1,6 @@
-using RSI_ZAD12.Middleware;
+using RSI_REST_SERVER.Middleware;
+using RSI_REST_SERVER.Services.IServices;
+using RSI_REST_SERVER.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +13,24 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Rsi Api", Version = "v1" });
 });
+
+builder.Services.AddScoped<IMessageService, MessageService>();
+
 var app = builder.Build();
 
 app.UseMiddleware<MyResponseMiddleware>();
-app.UseMiddleware<BasicAuthMiddleware>();
+
+app.UseWhen(context => context.Request.Path.ToString().Contains("/Secured"), appBuilder =>
+{
+    appBuilder.UseMiddleware<BasicAuthMiddleware>();
+});
 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+
     app.UseOpenApi();
     app.UseSwaggerUI(c =>
     {

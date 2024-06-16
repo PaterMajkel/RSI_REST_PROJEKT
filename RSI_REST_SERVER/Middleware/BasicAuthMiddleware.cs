@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace RSI_ZAD12.Middleware
+namespace RSI_REST_SERVER.Middleware
 {
     public class BasicAuthMiddleware
     {
@@ -20,7 +20,7 @@ namespace RSI_ZAD12.Middleware
                 login = decodedCredentials[0];
                 password = decodedCredentials[1];
             }
-            
+
             if (login == "dobry" && password == "user")
             {
                 await _next(context);

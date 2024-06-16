@@ -1,11 +1,11 @@
-﻿namespace RSI_ZAD12.Middleware
+﻿namespace RSI_REST_SERVER.Middleware
 {
     public class MyResponseMiddleware
     {
         private readonly RequestDelegate _next;
         public MyResponseMiddleware(RequestDelegate next)
         {
-            _next = next;   
+            _next = next;
         }
         public async Task InvokeAsync(HttpContext context)
         {

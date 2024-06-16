@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
-namespace RSI_ZAD12.Models
+namespace RSI_REST_SERVER.Models
 {
 	public class Message
 	{

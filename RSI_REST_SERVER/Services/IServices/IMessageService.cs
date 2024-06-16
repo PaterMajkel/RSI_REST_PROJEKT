@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RSI_ZAD12.Models;
+using RSI_REST_SERVER.Models;
 
-namespace RSI_ZAD12.Services.IServices
+namespace RSI_REST_SERVER.Services.IServices
 {
     public interface IMessageService
     {

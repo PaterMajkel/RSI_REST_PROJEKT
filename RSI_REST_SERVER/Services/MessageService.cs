@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RSI_ZAD12.Models;
-using RSI_ZAD12.Services.IServices;
+using RSI_REST_SERVER.Models;
+using RSI_REST_SERVER.Services.IServices;
 
-namespace RSI_ZAD12.Services
+namespace RSI_REST_SERVER.Services
 {
-	public class MessageService : IMessageService
+    public class MessageService : IMessageService
     {
         private List<Message> messages = new List<Message>()
         {
@@ -48,7 +48,7 @@ namespace RSI_ZAD12.Services
         public List<Message> GetMessages(HttpRequest request)
         {
             var url = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(request);
-            
+
             var rtnValue = new List<Message>(messages);
             foreach (var message in rtnValue)
             {
@@ -98,7 +98,7 @@ namespace RSI_ZAD12.Services
 
         public List<string> GetMessageComments(int id, HttpRequest request)
         {
-            comments.TryGetValue(id, out List<String> messageComments);
+            comments.TryGetValue(id, out List<string> messageComments);
             return messageComments;
         }
     }
