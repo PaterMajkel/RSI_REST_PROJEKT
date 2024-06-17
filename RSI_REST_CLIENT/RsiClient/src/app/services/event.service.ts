@@ -62,6 +62,6 @@ export class EventService {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     headers.set('Accept', 'application/pdf');
 
-    return this.http.post<Blob>(`${this.apiUrl}/GenerateReport`, {sentList: ids},{ ...this.httpOptions, headers: headers, responseType: 'blob' as 'json'});
+    return this.http.post<Blob>(`${this.apiUrl}/GetPdf`, {sentList: ids},{ ...this.httpOptions, headers: headers, responseType: 'blob' as 'json'});
   }
 }

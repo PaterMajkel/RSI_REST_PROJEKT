@@ -60,10 +60,12 @@ public class EventController : ControllerBase
         return Ok(_eventSrv.GetAllEvents(Request));
     }
 
-    [HttpPost("[action]")]
-    public IActionResult GetPdf([FromBody] List<int> ids)
+    [HttpPost("GetPdf")]
+    public IActionResult GetPdf([FromBody] ListDto list)
     {
-        return Ok(_eventSrv.GetPdf(ids));
+        var eventList = list.SentList;
+
+        return File(_eventSrv.GetPdf(eventList), "application/pdf", "report.pdf");
     }
     [HttpPost("GenerateReport")]
     public IActionResult GetReport([FromBody] ListDto list) {
