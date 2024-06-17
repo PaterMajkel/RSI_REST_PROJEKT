@@ -14,10 +14,6 @@ public class Event
     {
         this.Id = id; 
         this.Name = name;
-        var details = new Details();
-        Details.Type = type;
-        Details.Date = date;
-        Details.Description = description;
-        this.Details = details;
+        this.Details = new Details() { Type = type, Date = date, Description = description };
     }
 }

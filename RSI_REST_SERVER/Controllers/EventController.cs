@@ -13,7 +13,7 @@ public class EventController : ControllerBase
         _eventSrv = eventSrv;
     }
 
-    [HttpGet("Events")]
+    [HttpGet("EventsForDay")]
     public IActionResult GetEventsForDay([FromQuery] DateTime date)
     {
         return Ok(_eventSrv.GetEventsForDay(date));
@@ -24,24 +24,32 @@ public class EventController : ControllerBase
         return Ok(_eventSrv.GetEventsForWeek(date));
     }
 
-    [HttpGet("EventInformation/{eventId}")]
+    [HttpGet("Events/{eventId}/Information")]
     public IActionResult GetEventInformation(int eventId)
     {
         return Ok(_eventSrv.GetEventInformation(eventId));
     }
     [HttpPost("AddEvent")]
-    public IActionResult AddEventFromBody(string name, string type, DateTime date, string description)
+    public IActionResult AddEventFromBody([FromBody] EventDto eventDto)
     {
-        return Ok(_eventSrv.AddEvent(name, type, date, description));
+        return Ok(_eventSrv.AddEvent(eventDto.Name, eventDto.Type, eventDto.Date.AddDays(1), eventDto.Description));
     }
 
     [HttpPut("ModifyEventInformation/{eventId}")]
-    public IActionResult AddEvenModifyEventInformationtModifyEventInformationFromBody(int eventId, string name, string type, DateTime date, string description)
+    public IActionResult ModifyEventInformation(int eventId, [FromBody] EventDto eventDto)
     {
-        return Ok(_eventSrv.AddEvent(name, type, date, description));
+        _eventSrv.ModifyEventInformation(eventId, eventDto.Name, eventDto.Type, eventDto.Date.AddDays(1), eventDto.Description);
+        return Ok();
     }
 
-    [HttpGet("GetAllEvents")]
+    [HttpDelete("{eventId}")]
+    public IActionResult DeleteEvent(int eventId)
+    {
+        _eventSrv.RemoveEvent(eventId);
+        return Ok();
+    }
+
+    [HttpGet("Events")]
     public IActionResult GetAllEvents()
     {
         return Ok(_eventSrv.GetAllEvents(Request));

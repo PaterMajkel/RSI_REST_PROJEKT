@@ -1,0 +1,24 @@
+<div *ngIf="linkedEvent | async as event" class="grid">
+  <form [formGroup]="form" class="col-8 col-offset-2" (submit)="closeDialog()">
+    <p-card class="grid" [header]="'Event data: ' + (event?.name ?? 'New Event')">
+      <p>Id: {{event.id}}</p>
+      <div class="field grid">
+        <div class="col-4">Name:</div>
+        <div class="col-8"><input class="w-full" pInputText  formControlName="name"/></div>
+      </div>
+      <div class="field grid">
+        <div class="col-4">Date of event:</div>
+        <div class="col-8"><p-calendar dateFormat="dd.mm.yy" formControlName="date"/></div>
+      </div>
+      <div class="field grid">
+        <div class="col-4">Type:</div>
+        <div class="col-8"><input class="w-full" pInputText  formControlName="type"/></div>
+      </div>
+      <div class="field grid">
+        <div class="col-4">Description:</div>
+        <div class="col-8"><input class="w-full" pInputText  formControlName="description"/></div>
+      </div>
+    </p-card>
+    <button class="m-2" type="submit" pButton >Submit</button>
+  </form>
+</div>

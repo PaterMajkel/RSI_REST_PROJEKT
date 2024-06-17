@@ -17,7 +17,7 @@ export class EventService {
   constructor(private http: HttpClient) { }
 
   getEventsForDay(date: Date): Observable<any> {
-    return this.http.get(`${this.apiUrl}/Events`, {
+    return this.http.get(`${this.apiUrl}/EventsForDay`, {
       ...this.httpOptions,
       params: { date: date.toISOString() }
     });
@@ -37,7 +37,7 @@ export class EventService {
   }
 
   getEventInformation(eventId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/EventInformation/${eventId}`, this.httpOptions);
+    return this.http.get(`${this.apiUrl}/Events/${eventId}/Information`, this.httpOptions);
   }
 
   addEvent(name: string, type: string, date: Date, description: string): Observable<any> {
@@ -47,11 +47,14 @@ export class EventService {
 
   modifyEventInformation(eventId: number, name: string, type: string, date: Date, description: string): Observable<any> {
     const body = { name, type, date, description };
+    console.log(body)
     return this.http.put(`${this.apiUrl}/ModifyEventInformation/${eventId}`, body, this.httpOptions);
   }
 
   getAllEvents(): Observable<EventDt[]> {
-    return this.http.get<EventDt[]>(`${this.apiUrl}/GetAllEvents`, this.httpOptions);
+    return this.http.get<EventDt[]>(`${this.apiUrl}/Events`, this.httpOptions);
   }
-
+  removeEvent(eventId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${eventId}`, this.httpOptions);
+  }
 }
