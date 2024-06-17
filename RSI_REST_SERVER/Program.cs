@@ -20,7 +20,7 @@ var app = builder.Build();
 
 app.UseMiddleware<MyResponseMiddleware>();
 
-app.UseMiddleware<BasicAuthMiddleware>();
+//app.UseMiddleware<BasicAuthMiddleware>();
 
 
 // Configure the HTTP request pipeline.
