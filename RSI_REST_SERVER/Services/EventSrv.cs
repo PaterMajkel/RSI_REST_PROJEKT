@@ -1,7 +1,13 @@
 ﻿using RSI_REST_SERVER.Models;
+using Spire.Pdf.Graphics;
+using Spire.Pdf;
 using System.Diagnostics.Tracing;
+using System.Drawing;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
+using System.Globalization;
+using Microsoft.Extensions.ObjectPool;
 
 namespace RSI_REST_SERVER.Services
 {
@@ -13,6 +19,7 @@ namespace RSI_REST_SERVER.Services
         int AddEvent(string name, string type, DateTime date, string description);
         void ModifyEventInformation(int eventId, string name, string type, DateTime date, string description);
         List<Event> GetAllEvents(HttpRequest request);
+        byte[] GetPdf(List<int> ids);
         void RemoveEvent(int id);
 
     }
@@ -42,7 +49,6 @@ namespace RSI_REST_SERVER.Services
             return events.Where(p => Utilities.Utilities.FirstDayOfWeek(p.Details.Date.Date) <= date.Date.AddDays(1)
             && Utilities.Utilities.LastDayOfWeek(p.Details.Date.Date) >= date.Date.AddDays(1)).ToList();
         }
-
         public Event GetEventInformation(int eventId)
         {
             var res = events.First(p => p.Id == eventId);
@@ -87,7 +93,43 @@ namespace RSI_REST_SERVER.Services
             }
 
             return eventList;
+        }
+        public byte[] GetPdf(List<int> ids)
+        {
+            PdfDocument doc = new PdfDocument();
+            PdfPageBase page = doc.Pages.Add();
+            PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial Unicode MS", 11f), true);
 
+            int yOffset = 10;
+            page.Canvas.DrawString("Lista wydarzeń:", font, PdfBrushes.Black, new PointF(0, yOffset += 30));
+
+            var selectedEvents = events.Where(x => ids.Contains(x.Id)).ToList();
+
+            foreach (var selectedEvent in selectedEvents)
+            {
+                string currentString =
+                    $"Id: {selectedEvent.Id}\t" +
+                    $"Nazwa: {selectedEvent.Name}\t" +
+                    $"Rodzaj: {selectedEvent.Details.Type}\t" +
+                    $"Data: {selectedEvent.Details.Date.ToShortDateString()}";
+                page.Canvas.DrawString(currentString, font, PdfBrushes.Black, new PointF(0, yOffset += 20));
+
+                var indexer = 0;
+                var charsPerLine = 80;
+                while (selectedEvent.Details.Description.Count() > indexer)
+                {
+                    var currentLine = new string(selectedEvent.Details.Description.Skip(indexer).Take(charsPerLine).ToArray());
+                    currentString = indexer == 0 
+                        ? $"Opis wydarzenia: {currentLine}" 
+                        : $"\t\t\t\t\t\t{currentLine}";
+                    page.Canvas.DrawString(currentString, font, PdfBrushes.Black, new PointF(0, yOffset += 15));
+
+                    indexer += charsPerLine;
+                }
+            }
+
+            doc.SaveToFile("lista_osob.pdf");
+            return File.ReadAllBytes("lista_osob.pdf");
         }
     }
 }

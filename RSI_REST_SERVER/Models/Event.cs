@@ -6,7 +6,7 @@ public class Event
 {
     public int Id { get; set; }
     public string Name { get; set; }
-   public Details Details { get; set; } = new Details();
+    public Details Details { get; set; } = new Details();
     public List<Link> Links { get; set; }
     public Event() { }
 

@@ -55,4 +55,10 @@ public class EventController : ControllerBase
         return Ok(_eventSrv.GetAllEvents(Request));
     }
 
+    [HttpPost("[action]")]
+    public IActionResult GetPdf([FromBody] List<int> ids)
+    {
+        return Ok(_eventSrv.GetPdf(ids));
+    }
+
 }
