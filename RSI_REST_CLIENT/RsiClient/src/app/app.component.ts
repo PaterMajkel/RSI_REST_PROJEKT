@@ -4,6 +4,8 @@ import { take } from 'rxjs';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InformationComponent } from './components/information/information.component';
 import { Router } from '@angular/router';
+import { EventDt } from './models/event';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-root',
@@ -67,5 +69,27 @@ export class AppComponent implements OnInit {
         ).subscribe(p=>window.location.reload());
       }
     });
+  }
+  getReport(events: EventDt[]){
+    this.eventSrv.getReport(events.map(p=>p.id)).subscribe(p=>{
+      saveAs(p, "raport.pdf")
+      // console.log(p)
+      // this.saveFile(p)
+    })
+  }
+
+  saveFile(p: any){
+    console.log(p)
+    const data = window.URL.createObjectURL(p.data);
+      var blob = new Blob([p.blob()], {type: 'application/pdf'});
+      var link = document.createElement('a');
+      link.href = data
+      link.download = p.fileName
+      link.dispatchEvent( new MouseEvent('click', {bubbles: true, cancelable: true, view: window}))
+
+      setTimeout(function() {
+        window.URL.revokeObjectURL(data)
+        link.remove()
+      }, 100)
   }
 }

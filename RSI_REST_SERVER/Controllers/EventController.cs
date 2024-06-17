@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RSI_REST_SERVER.Models;
 using RSI_REST_SERVER.Services;
+using Spire.Pdf.Graphics;
+using Spire.Pdf;
+using System.Drawing;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace RSI_REST_SERVER.Controllers;
 [Route("[controller]")]
@@ -60,5 +65,43 @@ public class EventController : ControllerBase
     {
         return Ok(_eventSrv.GetPdf(ids));
     }
+    [HttpPost("GenerateReport")]
+    public IActionResult GetReport([FromBody] ListDto list) {
+        var eventList = list.SentList;
+        var reportList = _eventSrv.GetAllEvents(Request).Where(p=>eventList.Contains(p.Id)).ToList();
 
+        PdfDocument pdfDocument = new PdfDocument();
+        PdfPageBase page = pdfDocument.Pages.Add();
+
+        // Set font
+        PdfFont font = new(PdfFontFamily.Helvetica, 11);
+
+        // Add title
+        page.Canvas.DrawString("Eventy Białostockie:", font, PdfBrushes.Black, new PointF(50, 50));
+
+        // Format date
+        int yPosition = 70;
+        foreach (var eventItem in reportList)
+        {
+            // Add event details
+            page.Canvas.DrawString($"Event nr: {(eventItem.Id)}", font, PdfBrushes.Black, new PointF(50, yPosition));
+            page.Canvas.DrawString($"Nazwa: {eventItem.Name}", font, PdfBrushes.Black, new PointF(50, yPosition += 10));
+            page.Canvas.DrawString($"Typ: {eventItem.Details.Type}", font, PdfBrushes.Black, new PointF(50, yPosition += 10));
+            page.Canvas.DrawString($"Data wydarzenia: {eventItem.Details.Date.ToString("dd-MM-yyyy")}", font, PdfBrushes.Black, new PointF(50, yPosition += 10));
+            page.Canvas.DrawString($"Opis: {eventItem.Details.Description}", font, PdfBrushes.Black, new PointF(50, yPosition += 10));
+            page.Canvas.DrawString(new string('-', 200), font, PdfBrushes.Black, new PointF(50, yPosition += 20));
+            yPosition += 30; // Adjust position for next event
+        }
+
+        // Save PDF to MemoryStream
+        MemoryStream ms = new MemoryStream();
+        pdfDocument.SaveToStream(ms, FileFormat.PDF);
+        return File(ms.ToArray(), "application/pdf", "report.pdf");
+    }
+
+}
+
+public class ListDto
+{
+    public List<int> SentList { get; set; }
 }

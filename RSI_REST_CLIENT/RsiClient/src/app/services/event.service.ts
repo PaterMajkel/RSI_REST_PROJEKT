@@ -57,4 +57,11 @@ export class EventService {
   removeEvent(eventId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${eventId}`, this.httpOptions);
   }
+
+  getReport(ids: number[]): Observable<any> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    headers.set('Accept', 'application/pdf');
+
+    return this.http.post<Blob>(`${this.apiUrl}/GenerateReport`, {sentList: ids},{ ...this.httpOptions, headers: headers, responseType: 'blob' as 'json'});
+  }
 }
