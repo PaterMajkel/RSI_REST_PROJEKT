@@ -7,7 +7,7 @@ namespace RSI_REST_SERVER.Services
 {
     public interface IEventSrv
     {
-         List<Event> GetEventsForDay(DateTime date);
+        List<Event> GetEventsForDay(DateTime date);
         List<Event> GetEventsForWeek(DateTime date);
         Event GetEventInformation(int eventId);
         int AddEvent(string name, string type, DateTime date, string description);
@@ -33,7 +33,7 @@ namespace RSI_REST_SERVER.Services
 
         public List<Event> GetEventsForDay(DateTime date)
         {
-            return events.Where(p=>p.Details.Date.Date == date.Date).ToList();
+            return events.Where(p => p.Details.Date.Date == date.Date).ToList();
         }
         public List<Event> GetEventsForWeek(DateTime date)
         {
@@ -43,7 +43,7 @@ namespace RSI_REST_SERVER.Services
 
         public Event GetEventInformation(int eventId)
         {
-            return events.First(p=>p.Id == eventId);
+            return events.First(p => p.Id == eventId);
         }
         public int AddEvent(string name, string type, DateTime date, string description)
         {
@@ -66,16 +66,17 @@ namespace RSI_REST_SERVER.Services
         }
         public List<Event> GetAllEvents(HttpRequest request)
         {
-            var eventList =  new List<Event>();
+            var eventList = new List<Event>();
             var url = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(request);
-           foreach(var ev  in events)
+            foreach (var ev in events)
             {
-                 ev.Links = new List<Link>()
+                ev.Links = new List<Link>()
                 {
                     new Link($"{url}/{ev.Id}", "self"),
                     new Link($"{url}/{ev.Id}/Details", "Details")
                 };
-}
+                eventList.Add(ev);
+            }
 
             return eventList;
 

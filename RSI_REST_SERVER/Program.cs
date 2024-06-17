@@ -18,10 +18,10 @@ builder.Services.AddSingleton<IEventSrv, EventSrv>();
 
 var app = builder.Build();
 
-app.UseMiddleware<MyResponseMiddleware>();
+//app.UseMiddleware<MyResponseMiddleware>();
 
 //app.UseMiddleware<BasicAuthMiddleware>();
-
+builder.Services.AddCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,6 +31,11 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rsi Api");
     });
+    app.UseCors(x => x
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .SetIsOriginAllowed(origin => true) // allow any origin
+                   .AllowCredentials()); // allow credentials
 }
 
 app.UseHttpsRedirection();

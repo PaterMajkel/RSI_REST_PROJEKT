@@ -9,8 +9,16 @@
         }
         public async Task InvokeAsync(HttpContext context)
         {
-            context.Request.Headers.Add("mojNaglowek", "rsi test");
-            await _next(context);
+            try
+            {
+                context.Request.Headers.Add("mojNaglowek", "rsi test");
+                await _next(context);
+            }
+            catch(Exception ex)
+            {
+                ;
+            }
+            
         }
     }
 }

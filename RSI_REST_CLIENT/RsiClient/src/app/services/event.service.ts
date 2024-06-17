@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { EventDt } from '../models/event';
 
 @Injectable()
 export class EventService {
 
-  private apiUrl = 'https://localhost:7278/'; // Replace with your actual API URL
+  private apiUrl = 'https://localhost:7278/Event'; // Replace with your actual API URL
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -29,6 +30,12 @@ export class EventService {
     });
   }
 
+  useLink(link: string): Observable<any>{
+    return this.http.get(`${link}`, {
+      ...this.httpOptions,
+    });
+  }
+
   getEventInformation(eventId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/EventInformation/${eventId}`, this.httpOptions);
   }
@@ -43,8 +50,8 @@ export class EventService {
     return this.http.put(`${this.apiUrl}/ModifyEventInformation/${eventId}`, body, this.httpOptions);
   }
 
-  getAllEvents(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/GetAllEvents`, this.httpOptions);
+  getAllEvents(): Observable<EventDt[]> {
+    return this.http.get<EventDt[]>(`${this.apiUrl}/GetAllEvents`, this.httpOptions);
   }
 
 }

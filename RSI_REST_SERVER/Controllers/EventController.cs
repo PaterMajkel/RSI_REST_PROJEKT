@@ -42,9 +42,9 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("GetAllEvents")]
-    public IActionResult GetAllEvents(HttpRequest request)
+    public IActionResult GetAllEvents()
     {
-        return Ok(_eventSrv.GetAllEvents(request));
+        return Ok(_eventSrv.GetAllEvents(Request));
     }
 
 }
