@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { EventService } from './services/event.service';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import { InformationComponent } from './components/information/information.compo
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './auth.interceptopr.ts';
 
 @NgModule({
   declarations: [AppComponent, InformationComponent],
@@ -30,14 +31,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CalendarModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [
     EventService,
     HttpClient,
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     DialogService,
     provideAnimations(),
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi   : true,
+    },
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent, ],
 })
 export class AppModule {}

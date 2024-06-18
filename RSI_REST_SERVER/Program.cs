@@ -15,12 +15,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddSingleton<IEventSrv, EventSrv>();
+builder.Services.AddTransient<MyResponseMiddleware>();
 
 var app = builder.Build();
 
-//app.UseMiddleware<MyResponseMiddleware>();
+app.UseMiddleware<MyResponseMiddleware>();
+app.UseMiddleware<BasicAuthMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-//app.UseMiddleware<BasicAuthMiddleware>();
 builder.Services.AddCors();
 
 // Configure the HTTP request pipeline.
@@ -32,15 +34,17 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rsi Api");
     });
     app.UseCors(x => x
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .SetIsOriginAllowed(origin => true) // allow any origin
-                   .AllowCredentials()); // allow credentials
+                   .SetIsOriginAllowed(origin => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                   );
+
+    //.AllowCredentials()); // allow credentials
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

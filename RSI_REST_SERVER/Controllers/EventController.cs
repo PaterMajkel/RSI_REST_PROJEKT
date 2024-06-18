@@ -21,6 +21,8 @@ public class EventController : ControllerBase
     [HttpGet("EventsForDay")]
     public IActionResult GetEventsForDay([FromQuery] DateTime date)
     {
+        throw new Exception("check");
+
         return Ok(_eventSrv.GetEventsForDay(date));
     }
     [HttpGet("EventsForWeek")]
@@ -33,6 +35,12 @@ public class EventController : ControllerBase
     public IActionResult GetEventInformation(int eventId)
     {
         return Ok(_eventSrv.GetEventInformation(eventId));
+    }
+
+    [HttpGet("Events/{eventId}/JustInformation")]
+    public IActionResult GetJustEventInformation(int eventId)
+    {
+        return Ok(_eventSrv.GetJustEventInformation(eventId));
     }
     [HttpPost("AddEvent")]
     public IActionResult AddEventFromBody([FromBody] EventDto eventDto)

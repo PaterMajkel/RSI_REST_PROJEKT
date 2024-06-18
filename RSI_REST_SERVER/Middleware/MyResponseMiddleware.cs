@@ -1,24 +1,18 @@
 ﻿namespace RSI_REST_SERVER.Middleware
 {
-    public class MyResponseMiddleware
+    public class MyResponseMiddleware : IMiddleware
     {
-        private readonly RequestDelegate _next;
-        public MyResponseMiddleware(RequestDelegate next)
+
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            _next = next;
-        }
-        public async Task InvokeAsync(HttpContext context)
-        {
-            try
+            context.Response.OnStarting(() =>
             {
-                context.Request.Headers.Add("mojNaglowek", "rsi test");
-                await _next(context);
-            }
-            catch(Exception ex)
-            {
-                ;
-            }
-            
+                context.Response.Headers.Append("bozyheader", "mleko");
+                return Task.CompletedTask;
+            });
+
+            await next(context);
+
         }
     }
 }

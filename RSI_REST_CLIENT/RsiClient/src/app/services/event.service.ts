@@ -9,7 +9,6 @@ export class EventService {
   private apiUrl = 'https://localhost:7278/Event'; // Replace with your actual API URL
   private httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
       'Authorization': 'Basic ' + btoa('dobry:user') // Replace with your actual username and password
     })
   };
@@ -52,6 +51,7 @@ export class EventService {
   }
 
   getAllEvents(): Observable<EventDt[]> {
+    console.log(this.httpOptions)
     return this.http.get<EventDt[]>(`${this.apiUrl}/Events`, this.httpOptions);
   }
   removeEvent(eventId: number): Observable<any> {
@@ -59,9 +59,9 @@ export class EventService {
   }
 
   getReport(ids: number[]): Observable<any> {
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    headers.set('Accept', 'application/pdf');
-
-    return this.http.post<Blob>(`${this.apiUrl}/GetPdf`, {sentList: ids},{ ...this.httpOptions, headers: headers, responseType: 'blob' as 'json'});
+    let httpOpts = { ...this.httpOptions }
+    httpOpts.headers = httpOpts.headers.append('Accept', 'application/pdf');
+    httpOpts.headers = httpOpts.headers.append('Content-Type', 'application/json')
+    return this.http.post<Blob>(`${this.apiUrl}/GetPdf`, {sentList: ids},{ ...httpOpts, responseType: 'blob' as 'json'});
   }
 }

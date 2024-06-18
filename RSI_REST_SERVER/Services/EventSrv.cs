@@ -16,6 +16,7 @@ namespace RSI_REST_SERVER.Services
         List<Event> GetEventsForDay(DateTime date);
         List<Event> GetEventsForWeek(DateTime date);
         Event GetEventInformation(int eventId);
+        Details GetJustEventInformation(int eventId);
         int AddEvent(string name, string type, DateTime date, string description);
         void ModifyEventInformation(int eventId, string name, string type, DateTime date, string description);
         List<Event> GetAllEvents(HttpRequest request);
@@ -54,6 +55,12 @@ namespace RSI_REST_SERVER.Services
             var res = events.First(p => p.Id == eventId);
             return res;
         }
+        public Details GetJustEventInformation(int eventId)
+        {
+            var res = events.First(p => p.Id == eventId).Details;
+            return res;
+        }
+
         public int AddEvent(string name, string type, DateTime date, string description)
         {
             var id = events.OrderByDescending(p => p.Id).First().Id + 1;
